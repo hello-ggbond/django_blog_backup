@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}博客详情{% endblock %}
+
+{% block head %}
+    <script src="{% static 'highlight/highlight.min.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+    <h2 style="font-style: italic">{{ blog.title }}</h2>
+    <hr>
+    <div>
+        <img src="{% static 'img/cxk.jpg' %}" alt="" height="35px" width="35px" class="rounded-circle">
+        <span class="ms-2">{{ blog.author.username }}</span>
+        <span class="ms-2">于</span>
+        <span class="ms-2">{{ blog.pub_date | date:"Y年m月d日 h时i分" }}</span>
+        <span class="ms-2">发布</span>
+    </div>
+    <hr>
+    <div class="py-2">
+        {{ blog.content|safe }}
+    </div>
+    <hr>
+    <div class="mb-3">
+        <h4>评论  ({{ blog.comments.all|length }}):</h4>
+        <form action="{% url 'blog:comment_pub' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="blog_id" value="{{ blog.id }}">
+            <div>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="这里是评论区，不是无人区"
+                           aria-label="Recipient's username" aria-describedby="button-addon2" name="content">
+                    <button type="submit" class="btn btn-primary" style="width: 20%">发布</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="mt-4">
+        <ul class="list-group list-group-flush">
+            {% for comment in blog.comments.all %}
+            <li class="list-group-item mb-2">
+                <div class="user-info" style="float: left">
+                    <img src="{% static 'img/珍德式泥鸭.png' %}" alt="" width="30px" height="30px" class="rounded-circle">
+                </div>
+                <div class="ms-3" style="float: left">
+                    <div style="font-size: 15px; color: #61666D">{{ comment.author.username }}</div>
+                    <div class="mt-3">{{ comment.content }}</div>
+                    {#<div style="font-size: 12px; color: #9499A0" class="mt-4">2024-10-12  14:30</div>#}
+                    <div style="font-size: 12px; color: #9499A0" class="mt-4">{{ comment.pub_date|date:"Y年m月d日 h时i分" }}</div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <script>
+    hljs.highlightAll();
+    </script>
+{% endblock %}

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <link rel="stylesheet" href="{% static 'bootstrap5/bootstrap.min.css' %}">
+    <script src="{% static 'bootstrap5/popper.min.js' %}"></script>
+    <script src="{% static 'bootstrap5/bootstrap.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <style>
+        #username {
+            padding: 0;
+        }
+
+        #code {
+            width: 335px;
+        }
+    </style>
+    <script src="{% static 'jquery/jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static 'js/register.js' %}"></script>
+</head>
+<body>
+<header class="p-3 text-bg-light border-bottom mb-3">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                <img src="{% static 'img/爬虫01.png' %}" alt="" height="60px" width="90px">
+            </a>
+
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0" style="font-size: 19px">
+                <li><a href="{% url 'blog:home' %}" class="nav-link px-5 text-secondary">首页</a></li>
+                <li><a href="{% url 'blog:blog_pub' %}" class="nav-link px-5 text-secondary">发布</a></li>
+                <li><a href="{% url 'blog:index' %}" class="nav-link px-5 text-secondary">博客</a></li>
+                <li><a href="{% url 'blog:blog_community' %}" class="nav-link px-5 text-secondary">社区</a></li>
+                <li><a href="#" class="nav-link px-5 text-secondary">关于</a></li>
+            </ul>
+
+            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search" method="get" action="{% url 'blog:search_blog' %}">
+                <input type="search" name="q" class="form-control form-control-light text-bg-light" placeholder="Search..."
+                       aria-label="Search">
+            </form>
+            {% if user.is_authenticated %}
+                <div class="dropdown text-end">
+                    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        <img src="{% static 'img/cxk.jpg' %}" alt="mdo" width="32" height="32" class="rounded-circle">
+                    </a>
+                    <ul class="dropdown-menu text-small">
+                        <li><a class="dropdown-item" href="#">New project...</a></li>
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{% url 'blog_auth:blog_logout' %}">退出登录</a></li>
+                    </ul>
+                </div>
+            {% else %}
+                <div class="text-end">
+                    <a href="{% url 'blog_auth:blog_login' %}" type="button" class="btn btn-outline-primary">登录</a>
+                    <a href="{% url 'blog_auth:blog_register' %}" type="button" class="btn btn-primary">注册</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+
+<div class="container bg-white p-4 rounded mx-auto" id="content" style="width: 500px; height: 480px">
+    <div style="max-width: 380px" class="m-auto mt-3">
+        {% if form %}
+            <div class="alert alert-warning" role="alert">
+                邮箱已经存在/验证码无效！！！
+            </div>
+        {% endif %}
+        <h3 class="text-lg-center mb-4">Register</h3>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row mb-4">
+                <label class="col-sm-2 col-form-label" id="username">用户名</label>
+                <div class="col-sm-10">
+                    <input type="text" name="username" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-4">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">邮箱</label>
+                <div class="col-sm-10">
+                    <input type="email" name="email" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-4">
+                <label id="username" class="col-sm-2 col-form-label">验证码</label>
+                <div class="input-group" id="code">
+                    <input type="text" name="captcha" class="form-control" placeholder="验证码"
+                           aria-label="Recipient's username" aria-describedby="button-addon2">
+                    <button class="btn btn-outline-secondary" type="button" id="captcha-btn">获取验证码</button>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <label for="inputPassword3" class="col-sm-2 col-form-label">密码</label>
+                <div class="col-sm-10">
+                    <input type="password" name="password" class="form-control" id="inputPassword3">
+                </div>
+            </div>
+            <button type="submit" id="register_button" class="btn btn-primary w-100 mt-4 mb-3">注册</button>
+        </form>
+    </div>
+</div>
+
+
+<footer class="d-flex flex-wrap justify-content-between align-items-center p-5 mt-5 border-top bg-white">
+    <div class="col-md-4 d-flex align-items-center">
+        <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+            <img src="{% static 'img/爬虫01.png' %}" width="65" height="35">
+        </a>
+        <span class="mb-3 mb-md-0 text-muted">© 2024 Company, Inc</span>
+    </div>
+
+    <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+        <li class="ms-3"><a class="text-muted" href="#">
+            <img src="{% static 'bootstrap-icons-1.11.3/github.svg' %}" width="25" height="25">
+        </a></li>
+        <li class="ms-3"><a class="text-muted" href="#">
+            <img src="{% static 'bootstrap-icons-1.11.3/twitter.svg' %}" width="25" height="25">
+        </a></li>
+        <li class="ms-3"><a class="text-muted" href="#">
+            <img src="{% static 'bootstrap-icons-1.11.3/instagram.svg' %}" width="25" height="25">
+        </a></li>
+        <li class="ms-3"><a class="text-muted" href="#">
+            <img src="{% static 'bootstrap-icons-1.11.3/facebook.svg' %}" width="25" height="25">
+        </a></li>
+    </ul>
+</footer>
+</body>
+</html>
